@@ -41,13 +41,9 @@ FeatherScroll will be automatically available globally as `FeatherScroll`.
 ```
 
 ### **2️⃣ Initialize FeatherScroll**
-
+FeatherScroll automatically makes scroll smooth without taking any parameter too. 
 ```js
-const scroll = new FeatherScroll({
-  smooth: true,
-  duration: 1.2,
-  direction: 'vertical'
-});
+const scroll = new FeatherScroll();
 ```
 
 ---
