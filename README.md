@@ -41,7 +41,9 @@ FeatherScroll will be automatically available globally as `FeatherScroll`.
 ```
 
 ### **2️⃣ Initialize FeatherScroll**
-FeatherScroll automatically makes scroll smooth without taking any parameter too. 
+
+Feather Scroll doesn't need any extra options for basic initialization
+
 ```js
 const scroll = new FeatherScroll();
 ```
@@ -106,18 +108,16 @@ You can combine both:
 
 ## 🔄 Scroll Direction Detection
 
-You can detect whether the user is scrolling up or down:
+You can detect whether the user is scrolling up or down using an event listener:
 
 ```js
-scroll.lenis.on('scroll', ({ scroll }) => {
-  if (scroll > scroll.lastScroll) {
-    console.log('Scrolling Down');
-  } else {
-    console.log('Scrolling Up');
-  }
-  scroll.lastScroll = scroll;
+document.addEventListener('scroll', () => {
+  const direction = scroll.getScrollDirection();
+  console.log(`Scrolling ${direction}`);
 });
 ```
+
+This will return `'up'` or `'down'` based on the user's scroll behavior.
 
 ---
 
@@ -160,6 +160,18 @@ scroll.destroy();
 
 ---
 
+## 🛠️ Updating Options Dynamically
+
+You can update the scroll options dynamically:
+
+```js
+scroll.updateOptions({ duration: 2, smooth: false });
+```
+
+This allows you to modify scroll settings without reinitializing the instance.
+
+---
+
 ## 🌍 Supporting Multiple Scroll Instances
 
 FeatherScroll supports multiple scrolling areas:
@@ -169,17 +181,17 @@ const scroll1 = new FeatherScroll({ wrapper: '.container1', content: '.content1'
 const scroll2 = new FeatherScroll({ wrapper: '.container2', content: '.content2' });
 ```
 
-You can also **control all instances at once**:
+---
 
-```js
-FeatherScroll.destroyAll();
-```
+## 📜 License
+
+FeatherScroll is open-source under the [MIT License](LICENSE).
 
 ---
 
 ## 🤝 Contributing
 
-If you want to contribute, feel free to submit pull requests on [GitHub](https://github.com/ranvijay-raj/Feather-scroll-js).
+If you want to contribute, feel free to submit pull requests on [GitHub](https://github.com/yourusername/featherscroll).
 
 ---
 
