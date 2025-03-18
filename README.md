@@ -42,7 +42,7 @@ FeatherScroll will be automatically available globally as `FeatherScroll`.
 
 ### **2️⃣ Initialize FeatherScroll**
 
-Feather Scroll doesn't need any extra options for basic initialization
+Feather Scroll doesn't need any extra options for basic smooth scrolling initialization
 
 ```js
 const scroll = new FeatherScroll();
