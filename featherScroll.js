@@ -1062,8 +1062,6 @@
           });
       } 
       setupScrollTrigger() {
-          ScrollTrigger.defaults({ scroller: this.wrapper });
-      
           // Sync ScrollTrigger with Lenis
           this.lenis.on('scroll', () => {
             ScrollTrigger.update();
