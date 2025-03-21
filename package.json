@@ -1,6 +1,6 @@
 {
   "name": "scrollfeather",
-  "version": "1.0.0",
+  "version": "1.0.10",
   "description": "A lightweight and smooth scrolling library. Works for both full-page and container-based scrolling also supports all devices.",
   "main": "/featherScroll.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "web-performance"
   ],
   "author": "Ranvijay Raj",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "lenis": "^1.2.3"
   },
