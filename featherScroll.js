@@ -1037,36 +1037,40 @@
         });
     }
     
-        updateParallax() {
-          const scrollY = this.lenis.scroll; // Get smooth vertical scroll value
-      
-          this.parallaxElements.forEach((el) => {
-              const speed = parseFloat(el.getAttribute('data-scroll-speed')) || 1;
-              const direction = el.getAttribute('data-scroll-direction') || 'vertical';
-      
-              const initialTop = parseFloat(el.dataset.initialTop);
-              const initialLeft = parseFloat(el.dataset.initialLeft);
-      
-              let offsetX = 0, offsetY = 0;
-      
-              if (direction === 'horizontal') {
-                  offsetX = (scrollY - initialTop) * speed * 0.1; // Map vertical scroll to horizontal movement
-              } else if (direction === 'vertical') {
-                  offsetY = (scrollY - initialTop) * speed * 0.1;
-              } else if (direction === 'both') {
-                  offsetX = (scrollY - initialTop) * speed * 0.1;
-                  offsetY = (scrollY - initialTop) * speed * 0.1;
-              }
-      
-              el.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
-          });
-      } 
+    updateParallax() {
+    const scrollY = this.lenis.scroll;
+
+    this.parallaxElements.forEach((el) => {
+        const speed = parseFloat(el.getAttribute("data-scroll-speed")) || 1;
+        const direction = el.getAttribute("data-scroll-direction") || "vertical";
+
+        const initialTop = parseFloat(el.dataset.initialTop);
+        const initialLeft = parseFloat(el.dataset.initialLeft);
+
+        let offsetX = 0, offsetY = 0;
+
+        if (direction === "horizontal") {
+            offsetX = (scrollY - initialTop) * speed * 0.1;
+        } else if (direction === "vertical") {
+            offsetY = (scrollY - initialTop) * speed * 0.1;
+        } else if (direction === "both") {
+            offsetX = (scrollY - initialTop) * speed * 0.1;
+            offsetY = (scrollY - initialTop) * speed * 0.1;
+        }
+
+        // 🛠️ If GSAP is animating, get the current transform value
+        const gsapX = gsap.getProperty(el, "x") || 0;
+        const gsapY = gsap.getProperty(el, "y") || 0;
+
+        // 🔄 Combine both effects (GSAP animation + parallax)
+        el.style.transform = `translate3d(${offsetX + gsapX}px, ${offsetY + gsapY}px, 0)`;
+    });
+}
       setupScrollTrigger() {
           // Sync ScrollTrigger with Lenis
           this.lenis.on('scroll', () => {
             ScrollTrigger.update();
           });
-      
           console.log('FeatherScroll: ScrollTrigger integration enabled.');
       }
       scrollTo(target, options = {}) {
@@ -1101,5 +1105,4 @@
   }
       // Export as a global variable or ES module
       window.FeatherScroll = FeatherScroll;
-
 })();
