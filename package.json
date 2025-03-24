@@ -1,6 +1,6 @@
 {
   "name": "scrollfeather",
-  "version": "1.0.10",
+  "version": "1.2.0",
   "description": "A lightweight and smooth scrolling library. Works for both full-page and container-based scrolling also supports all devices.",
   "main": "/featherScroll.js",
   "scripts": {
