@@ -1038,34 +1038,38 @@
     }
     
     updateParallax() {
-    const scrollY = this.lenis.scroll;
-
-    this.parallaxElements.forEach((el) => {
-        const speed = parseFloat(el.getAttribute("data-scroll-speed")) || 1;
-        const direction = el.getAttribute("data-scroll-direction") || "vertical";
-
-        const initialTop = parseFloat(el.dataset.initialTop);
-        const initialLeft = parseFloat(el.dataset.initialLeft);
-
-        let offsetX = 0, offsetY = 0;
-
-        if (direction === "horizontal") {
-            offsetX = (scrollY - initialTop) * speed * 0.1;
-        } else if (direction === "vertical") {
-            offsetY = (scrollY - initialTop) * speed * 0.1;
-        } else if (direction === "both") {
-            offsetX = (scrollY - initialTop) * speed * 0.1;
-            offsetY = (scrollY - initialTop) * speed * 0.1;
-        }
-
-        // 🛠️ If GSAP is animating, get the current transform value
-        const gsapX = gsap.getProperty(el, "x") || 0;
-        const gsapY = gsap.getProperty(el, "y") || 0;
-
-        // 🔄 Combine both effects (GSAP animation + parallax)
-        el.style.transform = `translate3d(${offsetX + gsapX}px, ${offsetY + gsapY}px, 0)`;
-    });
-}
+      const scrollY = this.lenis.scroll;
+  
+      this.parallaxElements.forEach((el) => {
+          const speed = parseFloat(el.getAttribute("data-scroll-speed")) || 1;
+          const direction = el.getAttribute("data-scroll-direction") || "vertical";
+  
+          const initialTop = parseFloat(el.dataset.initialTop);
+          const initialLeft = parseFloat(el.dataset.initialLeft);
+  
+          let offsetX = 0, offsetY = 0;
+  
+          if (direction === "horizontal") {
+              offsetX = (scrollY - initialTop) * speed * 0.1;
+          } else if (direction === "vertical") {
+              offsetY = (scrollY - initialTop) * speed * 0.1;
+          } else if (direction === "both") {
+              offsetX = (scrollY - initialTop) * speed * 0.1;
+              offsetY = (scrollY - initialTop) * speed * 0.1;
+          }
+  
+          // 🛠️ Check if GSAP is available before using it
+          let gsapX = 0, gsapY = 0;
+          if (window.gsap) {
+              gsapX = gsap.getProperty(el, "x") || 0;
+              gsapY = gsap.getProperty(el, "y") || 0;
+          }
+  
+          // 🔄 Combine both effects (GSAP animation + parallax)
+          el.style.transform = `translate3d(${offsetX + gsapX}px, ${offsetY + gsapY}px, 0)`;
+      });
+  }
+  
       setupScrollTrigger() {
           // Sync ScrollTrigger with Lenis
           this.lenis.on('scroll', () => {
