@@ -133,10 +133,11 @@ scroll.scrollTo('#section', { offset: -50, duration: 1 });
 
 ## 🎬 GSAP ScrollTrigger Integration
 
-If GSAP ScrollTrigger is included, FeatherScroll will automatically sync with it:
+If GSAP ScrollTrigger is included, FeatherScroll will automatically sync with it
+
+The below code is useful when you have set a custom scroll container:
 
 ```js
-gsap.registerPlugin(ScrollTrigger);
 const scroll = new FeatherScroll();
 ScrollTrigger.defaults({ scroller: scroll.wrapper });
 ```
