@@ -138,8 +138,8 @@ If GSAP ScrollTrigger is included, FeatherScroll will automatically sync with it
 The below code is useful when you have set a custom scroll container:
 
 ```js
-const scroll = new FeatherScroll();
 ScrollTrigger.defaults({ scroller: scroll.wrapper });
+//scroll is the variable in which FeatherScroll is initialized
 ```
 
 ---
