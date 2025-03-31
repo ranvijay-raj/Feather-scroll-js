@@ -1080,23 +1080,19 @@
       scrollTo(target, options = {}) {
           this.lenis.scrollTo(target, options);
         }
-      
         // Enable smooth scrolling
         start() {
           this.lenis.start();
         }
-      
         // Disable smooth scrolling
         stop() {
           this.lenis.stop();
         }
-      
         // Destroy instance
         destroy() {
           this.lenis.destroy();
           FeatherScroll.instances = FeatherScroll.instances.filter((instance) => instance !== this);
         }
-      
         // Get scroll position
         getScrollPosition() {
           return this.lenis.scroll;
