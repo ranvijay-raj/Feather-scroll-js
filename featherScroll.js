@@ -1,9 +1,7 @@
 (function () {
   'use strict';
-
   // package.json
   var version = "1.2.3";
-
   // packages/core/src/maths.ts
   function clamp(min, input, max) {
     return Math.max(min, Math.min(input, max));
@@ -17,7 +15,6 @@
   function modulo(n, d) {
     return (n % d + d) % d;
   }
-
   // packages/core/src/animate.ts
   var Animate = class {
     isRunning = false;
@@ -83,7 +80,6 @@
       this.onUpdate = onUpdate;
     }
   };
-
   // packages/core/src/debounce.ts
   function debounce(callback, delay) {
     let timer;
@@ -96,7 +92,6 @@
       }, delay);
     };
   }
-
   // packages/core/src/dimensions.ts
   var Dimensions = class {
     constructor(wrapper, content, { autoResize = true, debounce: debounceValue = 250 } = {}) {
@@ -159,7 +154,6 @@
       };
     }
   };
-
   // packages/core/src/emitter.ts
   var Emitter = class {
     events = {};
@@ -201,7 +195,6 @@
       this.events = {};
     }
   };
-
   // packages/core/src/virtual-scroll.ts
   var LINE_HEIGHT = 100 / 6;
   var listenerOptions = { passive: false };
@@ -328,7 +321,6 @@
       };
     };
   };
-
   // packages/core/src/lenis.ts
   var Lenis = class {
     _isScrolling = false;
@@ -931,178 +923,186 @@
       this.rootElement.className = this.rootElement.className.replace(/lenis(-\w+)?/g, "").trim();
     }
   };
-
-  class FeatherScroll {
-    static instances = [];
-      constructor(options = {}){
-      this.wrapper = options.wrapper || document.documentElement;
-      this.content = options.content || document.body;
-
-      this.lenis = new Lenis({
-        wrapper: this.wrapper, // Apply to custom container if provided
-        content: this.content, // Define scrollable content inside wrapper
-        smooth: options.smooth ?? true,
-        duration: options.duration ?? 1.2,
-        easing: options.easing ?? ((t) => 1 - Math.pow(1 - t, 3)),
-        direction: options.direction ?? 'vertical',
-        gestureDirection: options.gestureDirection ?? 'both',
-        wheelMultiplier: options.mouseSenstivity ?? 1,
-        touchMultiplier: options.touchSenstivity ?? 2,
-        infinite: options.infinite ?? false
-      });
-      this.scrollDirection = 'down';
-      this.lastScroll = 0;
-      this.stickyElements = [...this.content.querySelectorAll('[data-scroll-sticky]')];
-      this.parallaxElements = [...this.content.querySelectorAll('[data-scroll-speed]')];
-      this.parallaxElements.forEach((el) => {
+class FeatherScroll {
+      // Stores all instances of FeatherScroll
+      static instances = [];
+      constructor(options = {}) {
+        this.wrapper = options.wrapper || document.documentElement;
+        this.content = options.content || document.body;
+        // Initialize Lenis with custom options or defaults
+        this.lenis = new Lenis({
+          wrapper: this.wrapper,
+          content: this.content,
+          smooth: options.smooth ?? true,
+          duration: options.duration ?? 1.2,
+          easing: options.easing ?? ((t) => 1 - Math.pow(1 - t, 3)),
+          direction: options.direction ?? 'vertical',
+          gestureDirection: options.gestureDirection ?? 'both',
+          wheelMultiplier: options.mouseSenstivity ?? 1,
+          touchMultiplier: options.touchSenstivity ?? 2,
+          infinite: options.infinite ?? false
+        });
+        // Scroll direction tracking
+        this.scrollDirection = 'down';
+        this.lastScroll = 0;
+        // Elements with sticky and parallax behavior
+        this.stickyElements = [...this.content.querySelectorAll('[data-scroll-sticky]')];
+        this.parallaxElements = [...this.content.querySelectorAll('[data-scroll-speed]')];
+        // Store initial positions for parallax elements
+        this.parallaxElements.forEach((el) => {
           const rect = el.getBoundingClientRect();
           el.dataset.initialTop = rect.top + window.scrollY;
           el.dataset.initialLeft = rect.left + window.scrollX;
         });
-
-      this.initStickyElements();
-      this.trackScrollDirection();
-      this.startRAF();
-      FeatherScroll.instances.push(this);
-      if (window.ScrollTrigger) {
+        // Initialize features
+        this.initStickyElements();
+        this.trackScrollDirection();
+        this.startRAF(); // Start animation loop
+        FeatherScroll.instances.push(this); // Register instance
+        if (window.ScrollTrigger) {
           this.setupScrollTrigger();
         }
+        // Observe body overflow for automatic disabling
+        this.observeBodyOverflow();
       }
+      // RAF loop for Lenis + sticky + parallax
       startRAF() {
-          const raf = (time) => {
-            this.lenis.raf(time);
-            this.updateStickyElements();
-            this.updateParallax();
-            requestAnimationFrame(raf);
-          };
+        const raf = (time) => {
+          this.lenis.raf(time);
+          this.updateStickyElements();
+          this.updateParallax();
           requestAnimationFrame(raf);
-        }    
-        trackScrollDirection() {
-          this.lenis.on('scroll', ({ scroll }) => {
-              const newDirection = scroll > this.lastScroll ? 'down' : 'up';
-      
-              // Update only if direction changes
-              if (newDirection !== this.scrollDirection) {
-                  this.scrollDirection = newDirection;
-              }
-              
-              this.lastScroll = scroll;
-          });
+        };
+        requestAnimationFrame(raf);
       }
-      
-      // Method to return the current scroll direction
-      getScrollDirection() {
-          return this.scrollDirection || 'down'; // Default value to avoid undefined
-      }
-      
-      initStickyElements() {
-        this.stickyElements.forEach((el) => {
-            const parent = el.parentElement;
-            const rect = el.getBoundingClientRect();
-    
-            el.dataset.stickyStart = parent.offsetTop; // Parent's start position
-            el.dataset.stickyEnd = parent.offsetTop + parent.offsetHeight; // Parent's end position
-            el.dataset.originalWidth = `${rect.width}px`; // Store width
-            el.dataset.originalHeight = `${rect.height}px`; // Store height
-        });
-    }
-    
-    updateStickyElements() {
-        const scrollY = this.lenis.scroll;
-        const viewportHeight = window.innerHeight;
-    
-        this.stickyElements.forEach((el) => {
-            const parent = el.parentElement;
-            const nextSibling = parent.nextElementSibling;
-            
-            if (!nextSibling) return; // If no next section, do nothing
-    
-            const stickyStart = parseFloat(el.dataset.stickyStart);
-            const stickyEnd = parseFloat(el.dataset.stickyEnd);
-            const parentRect = parent.getBoundingClientRect();
-            const nextRect = nextSibling.getBoundingClientRect(); // Get next section position
-    
-            // Check if next section is entering 50% of the viewport
-            const isNextEntering = nextRect.top < viewportHeight * 0.5;
-    
-            if (scrollY >= stickyStart && scrollY < stickyEnd && !isNextEntering) {
-                el.style.position = 'fixed';
-                el.style.top = `${window.innerHeight / 2 - el.offsetHeight / 2}px`; // Center vertically
-                el.style.left = `${parentRect.left + parentRect.width / 2 - el.offsetWidth / 2}px`; // Center horizontally
-                el.style.opacity = '1'; // Fully visible
-            } else {
-                el.style.position = 'relative';
-                el.style.opacity = '0'; // Hide smoothly when next section reaches 50%
-            }
-        });
-    }
-    
-    updateParallax() {
-      const scrollY = this.lenis.scroll;
-  
-      this.parallaxElements.forEach((el) => {
-          const speed = parseFloat(el.getAttribute("data-scroll-speed")) || 1;
-          const direction = el.getAttribute("data-scroll-direction") || "vertical";
-  
-          const initialTop = parseFloat(el.dataset.initialTop);
-          const initialLeft = parseFloat(el.dataset.initialLeft);
-  
-          let offsetX = 0, offsetY = 0;
-  
-          if (direction === "horizontal") {
-              offsetX = (scrollY - initialTop) * speed * 0.1;
-          } else if (direction === "vertical") {
-              offsetY = (scrollY - initialTop) * speed * 0.1;
-          } else if (direction === "both") {
-              offsetX = (scrollY - initialTop) * speed * 0.1;
-              offsetY = (scrollY - initialTop) * speed * 0.1;
+      // Detect scroll direction: 'up' or 'down'
+      trackScrollDirection() {
+        this.lenis.on('scroll', ({ scroll }) => {
+          const newDirection = scroll > this.lastScroll ? 'down' : 'up';
+          if (newDirection !== this.scrollDirection) {
+            this.scrollDirection = newDirection;
           }
-  
-          // 🛠️ Check if GSAP is available before using it
-          let gsapX = 0, gsapY = 0;
-          if (window.gsap) {
-              gsapX = gsap.getProperty(el, "x") || 0;
-              gsapY = gsap.getProperty(el, "y") || 0;
-          }
-  
-          // 🔄 Combine both effects (GSAP animation + parallax)
-          el.style.transform = `translate3d(${offsetX + gsapX}px, ${offsetY + gsapY}px, 0)`;
-      });
-  }
-  
-      setupScrollTrigger() {
-          // Sync ScrollTrigger with Lenis
-          this.lenis.on('scroll', () => {
-            ScrollTrigger.update();
-          });
-          console.log('FeatherScroll: ScrollTrigger integration enabled.');
+          this.lastScroll = scroll;
+        });
       }
-      scrollTo(target, options = {}) {
-          this.lenis.scrollTo(target, options);
-        }
-        // Enable smooth scrolling
-        start() {
-          this.lenis.start();
-        }
-        // Disable smooth scrolling
-        stop() {
+      // Observe overflow-y on body, pause/resume Lenis
+      observeBodyOverflow() {
+        const observer = new MutationObserver(() => {
+          const overflowY = window.getComputedStyle(document.body).overflowY;
+          if (overflowY === 'hidden') {
+            this.lenis.stop();
+          } else {
+            this.lenis.start();
+          }
+        });
+        observer.observe(document.body, {
+          attributes: true,
+          attributeFilter: ['style']
+        });
+        // Initial check
+        const initialOverflowY = window.getComputedStyle(document.body).overflowY;
+        if (initialOverflowY === 'hidden') {
           this.lenis.stop();
         }
-        // Destroy instance
-        destroy() {
-          this.lenis.destroy();
-          FeatherScroll.instances = FeatherScroll.instances.filter((instance) => instance !== this);
-        }
-        // Get scroll position
-        getScrollPosition() {
-          return this.lenis.scroll;
-        }
-      
-        // Update options dynamically
-        updateOptions(newOptions) {
-          Object.assign(this.lenis.options, newOptions);
-        }
-  }
-      // Export as a global variable or ES module
-      window.FeatherScroll = FeatherScroll;
+      }
+      // Return current scroll direction
+      getScrollDirection() {
+        return this.scrollDirection || 'down';
+      }
+      // Set initial positions for sticky elements
+      initStickyElements() {
+        this.stickyElements.forEach((el) => {
+          const parent = el.parentElement;
+          const rect = el.getBoundingClientRect();
+          el.dataset.stickyStart = parent.offsetTop;
+          el.dataset.stickyEnd = parent.offsetTop + parent.offsetHeight;
+          el.dataset.originalWidth = `${rect.width}px`;
+          el.dataset.originalHeight = `${rect.height}px`;
+        });
+      }
+      // Update sticky element positions
+      updateStickyElements() {
+        const scrollY = this.lenis.scroll;
+        const viewportHeight = window.innerHeight;
+        this.stickyElements.forEach((el) => {
+          const parent = el.parentElement;
+          const nextSibling = parent.nextElementSibling;
+          if (!nextSibling) return;
+          const stickyStart = parseFloat(el.dataset.stickyStart);
+          const stickyEnd = parseFloat(el.dataset.stickyEnd);
+          const parentRect = parent.getBoundingClientRect();
+          const nextRect = nextSibling.getBoundingClientRect();
+          // If next section enters halfway viewport, stop sticking
+          const isNextEntering = nextRect.top < viewportHeight * 0.5;
+          if (scrollY >= stickyStart && scrollY < stickyEnd && !isNextEntering) {
+            el.style.position = 'fixed';
+            el.style.top = `${window.innerHeight / 2 - el.offsetHeight / 2}px`;
+            el.style.left = `${parentRect.left + parentRect.width / 2 - el.offsetWidth / 2}px`;
+            el.style.opacity = '1';
+          } else {
+            el.style.position = 'relative';
+            el.style.opacity = '0';
+          }
+        });
+      }
+      // Apply parallax effect based on data attributes
+      updateParallax() {
+        const scrollY = this.lenis.scroll;
+        this.parallaxElements.forEach((el) => {
+          const speed = parseFloat(el.getAttribute("data-scroll-speed")) || 1;
+          const direction = el.getAttribute("data-scroll-direction") || "vertical";
+          const initialTop = parseFloat(el.dataset.initialTop);
+          const initialLeft = parseFloat(el.dataset.initialLeft);
+          let offsetX = 0, offsetY = 0;
+          if (direction === "horizontal") {
+            offsetX = (scrollY - initialTop) * speed * 0.1;
+          } else if (direction === "vertical") {
+            offsetY = (scrollY - initialTop) * speed * 0.1;
+          } else if (direction === "both") {
+            offsetX = (scrollY - initialTop) * speed * 0.1;
+            offsetY = (scrollY - initialTop) * speed * 0.1;
+          }
+          // If GSAP is present, respect GSAP transforms
+          let gsapX = 0, gsapY = 0;
+          if (window.gsap) {
+            gsapX = gsap.getProperty(el, "x") || 0;
+            gsapY = gsap.getProperty(el, "y") || 0;
+          }
+          el.style.transform = `translate3d(${offsetX + gsapX}px, ${offsetY + gsapY}px, 0)`;
+        });
+      }
+      // Integration with GSAP ScrollTrigger
+      setupScrollTrigger() {
+        this.lenis.on('scroll', () => {
+          ScrollTrigger.update();
+        });
+      }
+      // Public method: Scroll to a target
+      scrollTo(target, options = {}) {
+        this.lenis.scrollTo(target, options);
+      }
+      // Public method: Start scrolling
+      start() {
+        this.lenis.start();
+      }
+      // Public method: Stop scrolling
+      stop() {
+        this.lenis.stop();
+      }
+      // Public method: Destroy the instance
+      destroy() {
+        this.lenis.destroy();
+        FeatherScroll.instances = FeatherScroll.instances.filter((instance) => instance !== this);
+      }
+      // Public method: Get scroll position
+      getScrollPosition() {
+        return this.lenis.scroll;
+      }
+      // Update Lenis options dynamically
+      updateOptions(newOptions) {
+        Object.assign(this.lenis.options, newOptions);
+      }
+    }
+    // Export globally for browser usage
+    window.FeatherScroll = FeatherScroll;      
 })();
