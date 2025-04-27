@@ -16,12 +16,6 @@ FeatherScroll is a lightweight, smooth scrolling library designed for full devic
 
 ## 📦 Installation
 
-### **Using NPM**
-
-```sh
-npm install scrollfeather
-```
-
 ### **Using JSDelivr (CDN)**
 
 ```html
