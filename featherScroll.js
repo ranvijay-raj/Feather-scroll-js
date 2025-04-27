@@ -1103,10 +1103,5 @@ class FeatherScroll {
         Object.assign(this.lenis.options, newOptions);
       }
     }
-    if (typeof module !== "undefined" && module.exports) {
-      module.exports = FeatherScroll;
-    } else {
-      // For CDN users, attach to window
-      window.FeatherScroll = FeatherScroll;
-    }    
+    window.FeatherScroll = FeatherScroll;
 })();
