@@ -1103,6 +1103,10 @@ class FeatherScroll {
         Object.assign(this.lenis.options, newOptions);
       }
     }
-    // Export globally for browser usage
-    window.FeatherScroll = FeatherScroll;      
+    if (typeof module !== "undefined" && module.exports) {
+      module.exports = FeatherScroll;
+    } else {
+      // For CDN users, attach to window
+      window.FeatherScroll = FeatherScroll;
+    }    
 })();
