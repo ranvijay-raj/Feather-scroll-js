@@ -1,30 +1,37 @@
 {
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "lenis": "^1.3.1",
+    "rollup": "^4.40.1"
+  },
   "name": "scrollfeather",
-  "version": "1.2.5",
+  "version": "1.2.9",
   "description": "A lightweight and smooth scrolling library. Works for both full-page and container-based scrolling also supports all devices.",
-  "main": "/featherScroll.js",
+  "main": "dist/featherScroll.min.js",
+  "module": "dist/featherScroll.esm.js",
+  "unpkg": "dist/featherScroll.min.js",
   "scripts": {
-    "build": "rollup -c",
-    "prepublishOnly": "npm run build"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ranvijay-raj/Feather-scroll-js.git"
   },
   "keywords": [
     "smooth-scroll",
-    "scroll-animation",
-    "scrolling",
+    "lenis",
+    "scroll-library",
+    "animation",
     "featherscroll",
-    "scroll-effect",
-    "parallax",
-    "custom-scroll",
-    "web-performance"
+    "scrollfeather"
   ],
-  "author": "Ranvijay Raj",
+  "author": "Ranvijay raj",
   "license": "MIT",
-  "dependencies": {
-    "lenis": "^1.2.3"
+  "bugs": {
+    "url": "https://github.com/ranvijay-raj/Feather-scroll-js/issues"
   },
-  "devDependencies": {
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "rollup": "^2.79.2",
-    "rollup-plugin-terser": "^7.0.2"
-  }
+  "homepage": "https://github.com/ranvijay-raj/Feather-scroll-js#readme"
 }
