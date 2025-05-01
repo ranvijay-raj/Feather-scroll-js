@@ -16,10 +16,18 @@ FeatherScroll is a lightweight, smooth scrolling library designed for full devic
 
 ## 📦 Installation
 
+### **Using npm**
+
+To install FeatherScroll via npm, run the following command in your project directory:
+
+```bash
+npm install scrollfeather
+
+
 ### **Using JSDelivr (CDN)**
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/scrollfeather/featherScroll.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scrollfeather/dist/featherScroll.js"></script>
 ```
 
 FeatherScroll will be automatically available globally as `FeatherScroll`.
@@ -31,7 +39,7 @@ FeatherScroll will be automatically available globally as `FeatherScroll`.
 ### **1️⃣ Include FeatherScroll in Your Project**
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/scrollfeather/featherScroll.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scrollfeather/dist/featherScroll.js"></script>
 ```
 
 ### **2️⃣ Initialize FeatherScroll**
