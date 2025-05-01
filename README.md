@@ -37,7 +37,7 @@ const scroll = new FeatherScroll();
 You can also include FeatherScroll directly via CDN in your HTML:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/scrollfeather/dist/featherScroll.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scrollfeather/dist/featherScroll.min.js"></script>
 ```
 
 Once included, FeatherScroll is available globally as `FeatherScroll`:
@@ -52,7 +52,7 @@ const scroll = new FeatherScroll();
 ### **1️⃣ Include FeatherScroll in Your Project**
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/scrollfeather/dist/featherScroll.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scrollfeather/dist/featherScroll.min.js"></script>
 ```
 
 ### **2️⃣ Initialize FeatherScroll**
