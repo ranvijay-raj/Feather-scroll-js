@@ -45,7 +45,6 @@ Once included, FeatherScroll is available globally as `FeatherScroll`:
 ```js
 const scroll = new FeatherScroll();
 ```
-```
 ---
 
 ## 🛠️ Basic Usage
