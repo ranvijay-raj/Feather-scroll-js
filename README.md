@@ -216,7 +216,7 @@ If you want to contribute, feel free to submit pull requests on [GitHub](https:/
 If you find FeatherScroll useful and would like to support its development, consider donating:  
 
 - **PayPal:** [@RanvijayRaj](https://paypal.me/RanvijayRaj)  
-- **UPI:** gamersuraj720@okhdfcbank  
+- **UPI:**  N.A 
 
 Your support helps keep this project alive and improving! 🚀 
 
